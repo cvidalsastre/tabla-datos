@@ -1,25 +1,25 @@
 <template>
   <div>
-    <v-currency-field
-      label="Value"
-      v-bind="currency_config"
-      :error-messages="errors.price"
+    <money
       v-model="price"
-    ></v-currency-field>
+      v-bind="money"
+    ></money> {{price}}
   </div>
 </template>
 
 <script>
+import { Money } from 'v-money'
+
 export default {
+  components: { Money },
+
   data () {
     return {
-      errors: {},
-      price: 123.45,
-      currency_config: {
+      price: 1200,
+      money: {
         decimal: ',',
         thousands: '.',
-        prefix: 'R$ ',
-        suffix: ' #',
+        prefix: '$ ',
         precision: 2,
         masked: false,
         allowBlank: false,

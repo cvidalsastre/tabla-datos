@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <!-- <hello-world></hello-world> -->
-    <Plata>
-    </Plata>
+    <hello-world></hello-world>
+    <!-- <Plata>
+    </Plata> -->
   </v-app>
 </template>
 
@@ -13,8 +13,8 @@ import Plata from './components/Plata'
 export default {
   name: 'App',
   components: {
-    HelloWorld,
-    Plata
+    HelloWorld
+    // Plata
   },
   data () {
     return {

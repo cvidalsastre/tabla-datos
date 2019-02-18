@@ -71,17 +71,16 @@
           </v-date-picker>
         </v-menu>
         <td>
-          <v-currency-field
-            v-bind="currency_config"
-            :error-messages="errors.price"
+          <money
             v-model="props.item.monto"
+            v-bind="moneyConfig"
             :readonly="!editable"
             full-width
             single-line
             reverse
-            label="0,00"
-            suffix="$"
-          ></v-currency-field>
+            class="acolor"
+          ></money>
+          {{ props.item.monto }}
           <!-- <v-text-field
             :readonly="!editable"
             class="acolor"
@@ -204,12 +203,10 @@ import Dinero from 'dinero.js'
 export default {
   data: () => ({
     errors: {},
-    price: 123.45,
-    currency_config: {
+    moneyConfig: {
       decimal: ',',
       thousands: '.',
       prefix: '$ ',
-      suffix: ' #',
       precision: 2,
       masked: false,
       allowBlank: false,
@@ -234,12 +231,12 @@ export default {
     ],
     datosTabla: [{
       fecha: '2006-05-20',
-      monto: '',
+      monto: '1000',
       comentarios: 'Ingreso'
     },
     {
       fecha: '2024-02-1',
-      monto: '10,00',
+      monto: '1000',
       comentarios: 'Viaticos'
     }],
     editedIndex: -1,
