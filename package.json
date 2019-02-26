@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "dinero.js": "^1.5.0",
+    "moment": "^2.24.0",
+    "moment-timezone": "^0.5.23",
     "v-currency-field": "^1.0.6",
     "v-money": "^0.8.1",
     "vue": "^2.5.22",
+    "vue-input-autowidth": "^1.0.3",
     "vuetify": "^1.3.0"
   },
   "devDependencies": {
