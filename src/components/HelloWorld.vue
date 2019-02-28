@@ -1,7 +1,6 @@
 
 <template>
   <div>
-
     <v-toolbar
       flat
       color="#42A5F5"
@@ -29,11 +28,9 @@
         slot-scope="props"
       >
         <td>
-          <!-- creo q v model genera los conflictos del text field al hacer click -->
           <v-menu
             ref="menuref"
-            :close-on-content-click="false"
-            :nudge-right="40"
+            close-on-content-click
             lazy
             transition="scale-transition"
             offset-y
@@ -43,26 +40,33 @@
             v-model="props.item.menu"
           >
             <v-text-field
-              slot="activator"
-              :value="props.item.fecha"
-              label="Date"
-              prepend-icon="event"
-              readonly
+              input
               single-line
+              slot="activator"
+              :value="formatDate(props.item.fecha)"
+              readonly
             ></v-text-field>
             <v-date-picker
-              v-model="
-              props.item.fecha"
-              scrollable
-              @change="props.item.menu= false"
-              locale="spa"
+              v-model="props.item.fecha"
+              locale="ES-ar"
             >
             </v-date-picker>
           </v-menu>
         </td>
         <td>
-          <money
-            v-autowidth="{maxWidth: '960px', minWidth: '25px', comfortZone: 14}"
+          <v-text-field
+            input
+            v-model.lazy="props.item.monto"
+            v-money="moneyConfig"
+            :readonly="!editable"
+            placeholder="Monto"
+            hint="Monto"
+            full-width
+            single-line
+            auto-grow="true"
+          >
+          </v-text-field>
+          <!-- <money
             :readonly="!editable"
             v-model="props.item.monto"
             v-bind="moneyConfig"
@@ -70,7 +74,7 @@
             full-width
             single-line
             hint="Ingrese Monto"
-          ></money>
+          ></money> -->
         </td>
         <td>
           <v-text-field
@@ -192,10 +196,11 @@
 <script>
 import Dinero from 'dinero.js'
 import moment from 'moment'
+import { VMoney } from 'v-money'
 // otra tabla año cuota, fecha, monto(polata), tipo(menu despplegable adicionales(1) reformulacion(2) nada(3))
 export default {
+  directives: { money: VMoney },
   data: () => ({
-
     menu: false,
     moneyConfig: {
       decimal: ',',
@@ -218,7 +223,8 @@ export default {
       { text: 'Concepto', value: 'concepto' },
       { text: 'Cuenta', value: 'cuenta' },
       { text: 'Año', value: 'año' },
-      { text: 'Comentarios', value: 'comentarios' }
+      { text: 'Comentarios', value: 'comentarios', sortable: false },
+      { text: '', value: '', sortable: false }
     ],
     datosprecargados: [{
       fecha: '2034-05-20',
@@ -229,21 +235,11 @@ export default {
       fecha: '2005-05-01',
       monto: '33',
       comentarios: 'Viaticos',
-      proveedor: 'isisgeva' }],
+      proveedor: 'isisgeva' }
+    ],
     datosTabla: [],
     editedIndex: -1,
     editedItem: {
-      fecha: '',
-      monto: '',
-      comentarios: '',
-      proveedor: '',
-      numeroFactura: '',
-      concepto: '',
-      cuenta: '',
-      cuota: '',
-      año: ''
-    },
-    defaultItem: {
       fecha: '',
       monto: '',
       comentarios: '',
@@ -258,14 +254,6 @@ export default {
   computed: {
     computedDateFormattedMomentjs () {
       return this.datosTabla.fecha ? moment(this.datosTabla.fecha).format('dddd, MMMM Do YYYY') : ''
-    },
-    formatdate () {
-      return this.datosTabla.map(x => {
-        const fechi = x.fecha
-
-        console.log({ fechi })
-        return fechi
-      })
     },
     sumaMontos () {
       return this.datosTabla
@@ -288,6 +276,9 @@ export default {
   watch: {
   },
   methods: {
+    formatDate (fecha) {
+      return moment(fecha).format('DD/MM/YYYY')
+    },
     editItem (item) {
       this.editedIndex = this.datosTabla.indexOf(item)
       this.editedItem = Object.assign({}, item)
