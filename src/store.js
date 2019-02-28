@@ -1,18 +1,9 @@
 import Vuex from 'vuex'
+import Vue from 'vue'
 import axios from 'axios'
-
+Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
-    headers: [
-      { text: 'Fecha', value: 'fecha' },
-      { text: 'Monto', value: 'monto' },
-      { text: 'Proveedor', value: 'proveedor' },
-      { text: 'Número de factura', value: 'numeroFactura' },
-      { text: 'Concepto', value: 'concepto' },
-      { text: 'Cuenta', value: 'cuenta' },
-      { text: 'Año', value: 'año' },
-      { text: 'Comentarios', value: 'comentarios' }
-    ],
     datosprecargados: [],
     datosTabla: [],
     editedIndex: -1,

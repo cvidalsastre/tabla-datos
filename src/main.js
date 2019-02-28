@@ -5,6 +5,7 @@ import money from 'v-money'
 import store from './store'
 
 // Vue.use es solamente para agregar plugins a Vue, no para importar cualquier libreria.
+
 Vue.use(money)
 Vue.config.productionTip = false
 new Vue({

@@ -238,7 +238,6 @@ export default {
       comentarios: 'Viaticos',
       proveedor: 'isisgeva' }
     ],
-    datosTabla: [],
     editedIndex: -1,
     editedItem: {
       fecha: '',
@@ -288,7 +287,6 @@ export default {
       this.datosTabla.push(...this.datosprecargados)
     },
     methods: {
-
       nuevo () {
         this.datosTabla.push({
           fecha: '',
