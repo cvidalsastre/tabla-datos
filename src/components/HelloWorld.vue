@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <v-toolbar
@@ -144,9 +143,9 @@
           <v-text-field
             slot="input"
             label="Edit"
-            v-model="props.item.comentario"
+            v-model="props.item.comentarios"
             :readonly="!editable"
-            :return-value.sync="props.item.comentario"
+            :return-value.sync="props.item.comentarios"
             placeholder="Comentario"
             hint="Comentario"
             full-width
@@ -197,9 +196,11 @@
 import Dinero from 'dinero.js'
 import moment from 'moment'
 import { VMoney } from 'v-money'
+import { mapState } from 'vuex'
 // otra tabla año cuota, fecha, monto(polata), tipo(menu despplegable adicionales(1) reformulacion(2) nada(3))
 export default {
   directives: { money: VMoney },
+  mounted () { this.$store.dispatch('cargaDatos') },
   data: () => ({
     menu: false,
     moneyConfig: {
@@ -252,6 +253,9 @@ export default {
     }
   }),
   computed: {
+    ...mapState({
+      headers: state => state.headers,
+      datosTabla: state => state.datosTabla }),
     computedDateFormattedMomentjs () {
       return this.datosTabla.fecha ? moment(this.datosTabla.fecha).format('dddd, MMMM Do YYYY') : ''
     },
@@ -268,9 +272,6 @@ export default {
         .toUnit()
     }
   },
-  mounted () {
-    this.beforeSuma()
-  },
   props: {
   },
   watch: {
@@ -286,23 +287,26 @@ export default {
     beforeSuma () {
       this.datosTabla.push(...this.datosprecargados)
     },
-    nuevo () {
-      this.datosTabla.push({
-        fecha: '',
-        monto: '',
-        comentarios: '',
-        proveedor: '',
-        numeroFactura: '',
-        concepto: '',
-        cuenta: '',
-        cuota: '',
-        año: ''
-      })
-    },
-    deleteItem (item) {
-      const index = this.datosTabla.indexOf(item)
-      console.log({ index })
-      confirm('Are you sure you want to delete this item?') && this.datosTabla.splice(index, 1)
+    methods: {
+
+      nuevo () {
+        this.datosTabla.push({
+          fecha: '',
+          monto: '',
+          comentarios: '',
+          proveedor: '',
+          numeroFactura: '',
+          concepto: '',
+          cuenta: '',
+          cuota: '',
+          año: ''
+        })
+      },
+      deleteItem (item) {
+        const index = this.datosTabla.indexOf(item)
+        console.log({ index })
+        confirm('Are you sure you want to delete this item?') && this.datosTabla.splice(index, 1)
+      }
     }
   }
 }
