@@ -1,12 +1,8 @@
-import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
-Vue.use(Vuex)
-
 export default new Vuex.Store({
   state: {
-
     headers: [
       { text: 'Fecha', value: 'fecha' },
       { text: 'Monto', value: 'monto' },
@@ -41,14 +37,14 @@ export default new Vuex.Store({
       cuenta: '',
       cuota: '',
       año: ''
-
     }
   },
-  actions:
-  {
+  actions: {
     async cargaDatos (state) {
       try {
-        const httpDataPromise = await axios.get('http://sinos.unsam.edu.ar/cuestor')
+        const httpDataPromise = await axios.get(
+          'http://sinos.unsam.edu.ar/cuestor'
+        )
         console.log(httpDataPromise)
         const httpData = httpDataPromise.data
         state.commit('SET_DATA', httpData)
@@ -68,8 +64,7 @@ export default new Vuex.Store({
     //     })
     // }
   },
-  mutations:
-  {
+  mutations: {
     SET_DATA (state, httpData) {
       state.datosTabla = httpData
     }
