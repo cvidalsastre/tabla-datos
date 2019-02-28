@@ -4,11 +4,13 @@ import App from './App.vue'
 import money from 'v-money'
 import VueInputAutowidth from 'vue-input-autowidth'
 import moment from 'moment'
+import store from './store'
 
 Vue.use(VueInputAutowidth)
 Vue.use(money)
 Vue.config.productionTip = false
 new Vue({
+  store,
   render: h => h(App)
 }).$mount('#app')
 Vue.use(moment)

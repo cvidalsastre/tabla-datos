@@ -140,9 +140,9 @@
           <v-text-field
             slot="input"
             label="Edit"
-            v-model="props.item.comentario"
+            v-model="props.item.comentarios"
             :readonly="!editable"
-            :return-value.sync="props.item.comentario"
+            :return-value.sync="props.item.comentarios"
             placeholder="Comentario"
             hint="Comentario"
             full-width
@@ -192,8 +192,10 @@
 <script>
 import Dinero from 'dinero.js'
 import moment from 'moment'
+import { mapState } from 'vuex'
 // otra tabla año cuota, fecha, monto(polata), tipo(menu despplegable adicionales(1) reformulacion(2) nada(3))
 export default {
+  mounted () { this.$store.dispatch('cargaDatos') },
   data: () => ({
 
     menu: false,
@@ -210,27 +212,7 @@ export default {
     errors: {},
     admin: true,
     editable: true,
-    headers: [
-      { text: 'Fecha', value: 'fecha' },
-      { text: 'Monto', value: 'monto' },
-      { text: 'Proveedor', value: 'proveedor' },
-      { text: 'Número de factura', value: 'numeroFactura' },
-      { text: 'Concepto', value: 'concepto' },
-      { text: 'Cuenta', value: 'cuenta' },
-      { text: 'Año', value: 'año' },
-      { text: 'Comentarios', value: 'comentarios' }
-    ],
-    datosprecargados: [{
-      fecha: '2034-05-20',
-      monto: '1000,23',
-      comentarios: 'Ingreso'
-    },
-    {
-      fecha: '2005-05-01',
-      monto: '33',
-      comentarios: 'Viaticos',
-      proveedor: 'isisgeva' }],
-    datosTabla: [],
+
     editedIndex: -1,
     editedItem: {
       fecha: '',
@@ -255,46 +237,31 @@ export default {
       año: ''
     }
   }),
-  computed: {
-    computedDateFormattedMomentjs () {
-      return this.datosTabla.fecha ? moment(this.datosTabla.fecha).format('dddd, MMMM Do YYYY') : ''
-    },
-    formatdate () {
-      return this.datosTabla.map(x => {
-        const fechi = x.fecha
+  computed:
+    {
+      ...mapState({
+        headers: state => state.headers,
+        datosTabla: state => state.datosTabla }),
 
-        console.log({ fechi })
-        return fechi
-      })
+      computedDateFormattedMomentjs () {
+        return this.datosTabla.fecha ? moment(this.datosTabla.fecha).format('dddd, MMMM Do YYYY') : ''
+      },
+      sumaMontos () {
+        return this.datosTabla
+          .map(x => {
+            const formatMonto = x.monto.replace('.', '').replace('$', '').trim()
+            const conCentavos = /,/g.test(formatMonto)
+            return conCentavos
+              ? Dinero({ amount: Number(x.monto.replace(/\D/g, '')), currency: 'ARS' })
+              : Dinero({ amount: Number(`${x.monto}00`), currency: 'ARS' })
+          })
+          .reduce((x, y) => x.add(y), Dinero({ amount: 0, currency: 'ARS' }, 0))
+          .toUnit()
+      }
     },
-    sumaMontos () {
-      return this.datosTabla
-        .map(x => {
-          const formatMonto = x.monto.replace('.', '').replace('$', '').trim()
-          const conCentavos = /,/g.test(formatMonto)
-          return conCentavos
-            ? Dinero({ amount: Number(x.monto.replace(/\D/g, '')), currency: 'ARS' })
-            : Dinero({ amount: Number(`${x.monto}00`), currency: 'ARS' })
-        })
-        .reduce((x, y) => x.add(y), Dinero({ amount: 0, currency: 'ARS' }, 0))
-        .toUnit()
-    }
-  },
-  mounted () {
-    this.beforeSuma()
-  },
-  props: {
-  },
-  watch: {
-  },
+
   methods: {
-    editItem (item) {
-      this.editedIndex = this.datosTabla.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-    },
-    beforeSuma () {
-      this.datosTabla.push(...this.datosprecargados)
-    },
+
     nuevo () {
       this.datosTabla.push({
         fecha: '',
