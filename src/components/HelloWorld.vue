@@ -19,6 +19,8 @@
     </v-toolbar>
 
     <v-data-table
+      hide-actions
+      :total-items="datosTabla.length"
       :headers="headers"
       :items="datosTabla"
     >
@@ -26,7 +28,7 @@
         slot="items"
         slot-scope="props"
       >
-        <td>
+        <td class="pa-0">
           <v-menu
             ref="menuref"
             close-on-content-click
@@ -39,11 +41,12 @@
             v-model="props.item.menu"
           >
             <v-text-field
-              input
-              single-line
               slot="activator"
               :value="formatDate(props.item.fecha)"
               readonly
+              full-width
+              single-line
+              auto-grow
             ></v-text-field>
             <v-date-picker
               v-model="props.item.fecha"
@@ -52,9 +55,9 @@
             </v-date-picker>
           </v-menu>
         </td>
-        <td>
+        <td class="pa-0">
           <v-text-field
-            input
+            slot="input"
             v-model.lazy="props.item.monto"
             v-money="moneyConfig"
             :readonly="!editable"
@@ -62,7 +65,7 @@
             hint="Monto"
             full-width
             single-line
-            auto-grow="true"
+            auto-grow
           >
           </v-text-field>
           <!-- <money
@@ -75,9 +78,9 @@
             hint="Ingrese Monto"
           ></money> -->
         </td>
-        <td>
+        <td class="pa-0">
           <v-text-field
-            input
+            slot="input"
             v-model="props.item.proveedor"
             :readonly="!editable"
             :return-value.sync="props.item.proveedor"
@@ -85,11 +88,11 @@
             hint="Provedoor"
             full-width
             single-line
-            auto-grow="true"
+            auto-grow
           >
           </v-text-field>
         </td>
-        <td>
+        <td class="pa-0">
           <v-text-field
             v-model="props.item.numeroFactura"
             :readonly="!editable"
@@ -101,7 +104,7 @@
           >
           </v-text-field>
         </td>
-        <td>
+        <td class="pa-0">
           <v-text-field
             v-model="props.item.concepto"
             :readonly="!editable"
@@ -113,7 +116,7 @@
           >
           </v-text-field>
         </td>
-        <td>
+        <td class="pa-0">
           <v-text-field
             v-model="props.item.cuenta"
             :readonly="!editable"
@@ -125,7 +128,7 @@
           >
           </v-text-field>
         </td>
-        <td>
+        <td class="pa-0">
           <v-text-field
             slot="input"
             label="Edit"
@@ -139,9 +142,8 @@
           >
           </v-text-field>
         </td>
-        <td>
-          <v-text-field
-            slot="input"
+        <td class="pa-0">
+          <v-textarea
             label="Edit"
             v-model="props.item.comentarios"
             :readonly="!editable"
@@ -150,11 +152,11 @@
             hint="Comentario"
             full-width
             single-line
-            comentarios
+            auto-grow
           >
-          </v-text-field>
+          </v-textarea>
         </td>
-        <td>
+        <td class="pa-0">
           <v-icon
             v-if="editable"
             mediumm
