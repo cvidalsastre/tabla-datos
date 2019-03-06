@@ -20,9 +20,9 @@
 
     <v-data-table
       hide-actions
-      :total-items="datosTabla.length"
+      :total-items="this.$store.state.datosTabla.length"
       :headers="headers"
-      :items="datosTabla"
+      :items="this.$store.state.datosTabla"
     >
       <template
         slot="items"
@@ -31,17 +31,17 @@
         <td class="pa-0">
           <v-menu
             ref="menuref"
-            close-on-content-click="false"
             transition="scale-transition"
             offset-y
             full-width
             min-width="290px"
-            open-delay="100"
+            lazy
+            open-delay="200"
             v-model="props.item.menu"
           >
             <v-text-field
               slot="activator"
-              :value="props.item.fecha"
+              :value="formatDate(props.item.fecha)"
               readonly
               full-width
               single-line
@@ -50,6 +50,7 @@
             <v-date-picker
               v-model="props.item.fecha"
               @change="props.item.menu=false"
+              locale="ES-ar"
             >
             </v-date-picker>
           </v-menu>
@@ -195,7 +196,7 @@
 </template>
 <script>
 import Dinero from 'dinero.js'
-// import moment from 'moment'
+import moment from 'moment'
 import { VMoney } from 'v-money'
 import { mapState } from 'vuex'
 // otra tabla año cuota, fecha, monto(polata), tipo(menu despplegable adicionales(1) reformulacion(2) nada(3))
@@ -203,7 +204,7 @@ export default {
 
   mounted () { this.$store.dispatch('cargaDatos') },
   data: () => ({
-    date: new Date().toISOString().substr(0, 10),
+    // date: new Date().toISOString().substr(0, 10),
     menu: false,
     directives: { money: VMoney },
     moneyConfig: {
@@ -234,15 +235,11 @@ export default {
   }),
   computed: {
 
-    ...mapState({
-      datosTabla: state => state.datosTabla }),
+    // ...mapState({
+    //   datosTabla: state => state.datosTabla }),
 
-    formatDate () {
-      return this.$store.getters.formatDate
-      // this.datosTabla.fecha ? moment(this.datosTabla.fecha).format('dddd, MMMM Do YYYY') : ''
-    },
     sumaMontos () {
-      return this.datosTabla
+      return this.$store.state.datosTabla
         .map(x => {
           const formatMonto = x.monto.replace('.', '').replace('$', '').trim()
           const conCentavos = /,/g.test(formatMonto)
@@ -254,16 +251,14 @@ export default {
         .toUnit()
     }
   },
-  props: {
-  },
-  watch: {
-
-  },
   methods: {
+    formatDate (fecha) {
+      return moment(fecha).format('DD/MM/YYYY')
+    },
     deleteItem (item) { this.$store.dispatch('deleteItem', item) },
 
     nuevo () {
-      this.datosTabla.push({
+      this.$store.state.datosTabla.push({
         fecha: '',
         monto: '',
         comentarios: '',

@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import axios from 'axios'
-// import moment from 'moment'
+import moment from 'moment'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -27,12 +27,18 @@ export default new Vuex.Store({
           'http://sinos.unsam.edu.ar/cuestor'
         )
         const httpData = httpDataPromise.data
-        context.commit('SET_DATA', httpData)
+        context.dispatch('formatDatos', httpData)
       } catch (error) {
         console.log('error', error)
       }
     },
-    formatDatos (context) {}
+    formatDatos (context, datos) {
+      const momentFecha = datos.map(d => ({
+        ...d,
+        fecha: moment(d.fecha).format('YYYY-MM-DD') // .format('dddd, MMMM Do YYYY')
+      }))
+      context.commit('SET_DATA', momentFecha)
+    }
     // cargaDatos (state) {
     //   axios
     //     .get('http://sinos.unsam.edu.ar/cuestor')
