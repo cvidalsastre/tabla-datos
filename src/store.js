@@ -1,42 +1,32 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import axios from 'axios'
+import moment from 'moment'
 Vue.use(Vuex)
+
 export default new Vuex.Store({
   state: {
-    datosprecargados: [],
-    datosTabla: [],
-    editedIndex: -1,
-    editedItem: {
-      fecha: '',
-      monto: '',
-      comentarios: '',
-      proveedor: '',
-      numeroFactura: '',
-      concepto: '',
-      cuenta: '',
-      cuota: '',
-      año: ''
-    },
-    defaultItem: {
-      fecha: '',
-      monto: '',
-      comentarios: '',
-      proveedor: '',
-      numeroFactura: '',
-      concepto: '',
-      cuenta: '',
-      cuota: '',
-      año: ''
+    datosTabla: []
+  },
+  getters: {
+    formatDate (state) {
+      state.datosTabla
+        .map(x => {
+
+        })
     }
   },
+
   actions: {
+    deleteItem (state, item) {
+      const datos = item
+      state.commit('deleteItem', datos)
+    },
     async cargaDatos (state) {
       try {
         const httpDataPromise = await axios.get(
           'http://sinos.unsam.edu.ar/cuestor'
         )
-        console.log(httpDataPromise)
         const httpData = httpDataPromise.data
         state.commit('SET_DATA', httpData)
       } catch (error) {
@@ -58,6 +48,11 @@ export default new Vuex.Store({
   mutations: {
     SET_DATA (state, httpData) {
       state.datosTabla = httpData
+    },
+    deleteItem (state, item) {
+      const index = state.datosTabla.indexOf(item)
+      console.log(index)
+      confirm('Are you sure you want to delete this item?') && state.datosTabla.splice(index, 1)
     }
   }
 })

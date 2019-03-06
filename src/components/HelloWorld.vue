@@ -29,25 +29,27 @@
         <td>
           <v-menu
             ref="menuref"
-            close-on-content-click
-            lazy
+            close-on-content-click="false"
             transition="scale-transition"
             offset-y
             full-width
             min-width="290px"
-            open-delay="200"
+            open-delay="100"
             v-model="props.item.menu"
           >
-            <v-text-field
-              input
-              single-line
-              slot="activator"
-              :value="formatDate(props.item.fecha)"
-              readonly
-            ></v-text-field>
+            <template v-slot:activator="{on}">
+              <v-text-field
+                input
+                single-line
+                slot="activator"
+                :value="formatDate"
+                readonly
+                v-on='on'
+              ></v-text-field>
+            </template>
             <v-date-picker
               v-model="props.item.fecha"
-              locale="ES-ar"
+              @change="props.item.menu=false"
             >
             </v-date-picker>
           </v-menu>
@@ -55,8 +57,8 @@
         <td>
           <v-text-field
             input
-            v-model.lazy="props.item.monto"
-            v-money="moneyConfig"
+            v-model="props.item.monto"
+            v-money.prevent="moneyConfig"
             :readonly="!editable"
             placeholder="Monto"
             hint="Monto"
@@ -194,15 +196,17 @@
 </template>
 <script>
 import Dinero from 'dinero.js'
-import moment from 'moment'
+// import moment from 'moment'
 import { VMoney } from 'v-money'
 import { mapState } from 'vuex'
 // otra tabla año cuota, fecha, monto(polata), tipo(menu despplegable adicionales(1) reformulacion(2) nada(3))
 export default {
-  directives: { money: VMoney },
+
   mounted () { this.$store.dispatch('cargaDatos') },
   data: () => ({
+    date: new Date().toISOString().substr(0, 10),
     menu: false,
+    directives: { money: VMoney },
     moneyConfig: {
       decimal: ',',
       thousands: '.',
@@ -226,37 +230,17 @@ export default {
       { text: 'Año', value: 'año' },
       { text: 'Comentarios', value: 'comentarios', sortable: false },
       { text: '', value: '', sortable: false }
-    ],
-    datosprecargados: [{
-      fecha: '2034-05-20',
-      monto: '1000,23',
-      comentarios: 'Ingreso'
-    },
-    {
-      fecha: '2005-05-01',
-      monto: '33',
-      comentarios: 'Viaticos',
-      proveedor: 'isisgeva' }
-    ],
-    editedIndex: -1,
-    editedItem: {
-      fecha: '',
-      monto: '',
-      comentarios: '',
-      proveedor: '',
-      numeroFactura: '',
-      concepto: '',
-      cuenta: '',
-      cuota: '',
-      año: ''
-    }
+    ]
+
   }),
   computed: {
+
     ...mapState({
-      headers: state => state.headers,
       datosTabla: state => state.datosTabla }),
-    computedDateFormattedMomentjs () {
-      return this.datosTabla.fecha ? moment(this.datosTabla.fecha).format('dddd, MMMM Do YYYY') : ''
+
+    formatDate (item) {
+      return this.$store.getters.formatDate
+      // this.datosTabla.fecha ? moment(this.datosTabla.fecha).format('dddd, MMMM Do YYYY') : ''
     },
     sumaMontos () {
       return this.datosTabla
@@ -274,38 +258,25 @@ export default {
   props: {
   },
   watch: {
+
   },
   methods: {
-    formatDate (fecha) {
-      return moment(fecha).format('DD/MM/YYYY')
-    },
-    editItem (item) {
-      this.editedIndex = this.datosTabla.indexOf(item)
-      this.editedItem = Object.assign({}, item)
-    },
-    beforeSuma () {
-      this.datosTabla.push(...this.datosprecargados)
-    },
-    methods: {
-      nuevo () {
-        this.datosTabla.push({
-          fecha: '',
-          monto: '',
-          comentarios: '',
-          proveedor: '',
-          numeroFactura: '',
-          concepto: '',
-          cuenta: '',
-          cuota: '',
-          año: ''
-        })
-      },
-      deleteItem (item) {
-        const index = this.datosTabla.indexOf(item)
-        console.log({ index })
-        confirm('Are you sure you want to delete this item?') && this.datosTabla.splice(index, 1)
-      }
+    deleteItem (item) { this.$store.dispatch('deleteItem', item) },
+
+    nuevo () {
+      this.datosTabla.push({
+        fecha: '',
+        monto: '',
+        comentarios: '',
+        proveedor: '',
+        numeroFactura: '',
+        concepto: '',
+        cuenta: '',
+        cuota: '',
+        año: ''
+      })
     }
+
   }
 }
 </script>
