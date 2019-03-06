@@ -27,17 +27,10 @@ export default new Vuex.Store({
           'http://sinos.unsam.edu.ar/cuestor'
         )
         const httpData = httpDataPromise.data
-        context.dispatch('formatDatos', httpData)
+        context.commit('SET_DATA', httpData)
       } catch (error) {
         console.log('error', error)
       }
-    },
-    formatDatos (context, datos) {
-      const momentFecha = datos.map(d => ({
-        ...d,
-        fecha: moment(d.fecha).format('YYYY-MM-DD') // .format('dddd, MMMM Do YYYY')
-      }))
-      context.commit('SET_DATA', momentFecha)
     }
     // cargaDatos (state) {
     //   axios

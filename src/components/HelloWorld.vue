@@ -41,7 +41,7 @@
           >
             <v-text-field
               slot="activator"
-              :value="formatDate(props.item.fecha)"
+              :value="formatFecha(props.item.fecha)"
               readonly
               full-width
               single-line
@@ -201,7 +201,6 @@ import { VMoney } from 'v-money'
 import { mapState } from 'vuex'
 // otra tabla año cuota, fecha, monto(polata), tipo(menu despplegable adicionales(1) reformulacion(2) nada(3))
 export default {
-
   mounted () { this.$store.dispatch('cargaDatos') },
   data: () => ({
     // date: new Date().toISOString().substr(0, 10),
@@ -231,7 +230,6 @@ export default {
       { text: 'Comentarios', value: 'comentarios', sortable: false },
       { text: '', value: '', sortable: false }
     ]
-
   }),
   computed: {
 
@@ -252,8 +250,8 @@ export default {
     }
   },
   methods: {
-    formatDate (fecha) {
-      return moment(fecha).format('DD/MM/YYYY')
+    formatFecha (fecha) {
+      return moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY')
     },
     deleteItem (item) { this.$store.dispatch('deleteItem', item) },
 
