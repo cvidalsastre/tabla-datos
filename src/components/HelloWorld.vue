@@ -38,6 +38,7 @@
             lazy
             open-delay="200"
             v-model="props.item.menu"
+            :close-on-content-click="false"
           >
             <v-text-field
               slot="activator"
@@ -257,7 +258,7 @@ export default {
 
     nuevo () {
       this.$store.state.datosTabla.push({
-        fecha: '',
+        fecha: new Date(),
         monto: '',
         comentarios: '',
         proveedor: '',
