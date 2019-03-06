@@ -20,9 +20,9 @@
 
     <v-data-table
       hide-actions
-      :total-items="this.$store.state.datosTabla.length"
+      :total-items="datosTabla.length"
       :headers="headers"
-      :items="this.$store.state.datosTabla"
+      :items="datosTabla"
     >
       <template
         slot="items"
@@ -233,10 +233,7 @@ export default {
     ]
   }),
   computed: {
-
-    // ...mapState({
-    //   datosTabla: state => state.datosTabla }),
-
+    datosTabla () { return this.$store.state.datosTabla },
     sumaMontos () {
       return this.$store.state.datosTabla
         .map(x => {
@@ -255,7 +252,6 @@ export default {
       return moment(fecha, 'YYYY-MM-DD').format('DD/MM/YYYY')
     },
     deleteItem (item) { this.$store.dispatch('deleteItem', item) },
-
     nuevo () {
       this.$store.state.datosTabla.push({
         fecha: new Date(),

@@ -8,15 +8,11 @@ export default new Vuex.Store({
   state: {
     datosTabla: []
   },
-  // getters: {
-  //   formatDate (state) {
-  //     state.datosTabla
-  //       .map(x => {
-
-  //       })
-  //   }
-  // },
-
+  getters: {
+    formatDate (state) {
+      state.datosTabla.map(x => {})
+    }
+  },
   actions: {
     deleteItem (context, item) {
       context.commit('deleteItem', item)
@@ -49,9 +45,8 @@ export default new Vuex.Store({
       state.datosTabla = httpData
     },
     deleteItem (state, item) {
-      const index = state.datosTabla.indexOf(item)
-      confirm('Are you sure you want to delete this item?') &&
-        state.datosTabla.splice(index, 1)
+      confirm('Are you sure you want to delete this item?')
+      state.datosTabla = state.datosTabla.filter(i => i !== item)
     }
   }
 })
