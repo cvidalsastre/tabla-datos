@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import axios from 'axios'
-import moment from 'moment'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -10,7 +10,7 @@ export default new Vuex.Store({
   },
   getters: {
     formatDate (state) {
-      state.datosTabla.map(x => {})
+      state.datosTabla.map(x => { })
     }
   },
   actions: {
@@ -45,8 +45,9 @@ export default new Vuex.Store({
       state.datosTabla = httpData
     },
     deleteItem (state, item) {
-      confirm('Are you sure you want to delete this item?')
-      state.datosTabla = state.datosTabla.filter(i => i !== item)
+      if (confirm('Are you sure you want to delete this item?')) {
+        state.datosTabla = state.datosTabla.filter(i => i !== item)
+      }
     }
   }
 })
