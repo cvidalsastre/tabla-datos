@@ -2,18 +2,19 @@
   <div>
     <v-toolbar
       flat
-      color="#42A5F5"
+      color="blue darken-4"
+      dark
     >
       <v-toolbar-title>Tabla Montos</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
         v-if="admin"
-        color="#64B5F6"
+        color="blue darken-3"
         @click="editable = !editable"
       >Editar</v-btn>
       <v-btn
         v-if="admin"
-        color="#64B5F6"
+        color="blue darken-3"
         @click="nuevo"
       >Nuevo</v-btn>
     </v-toolbar>
@@ -23,6 +24,7 @@
       :total-items="datosTabla.length"
       :headers="headers"
       :items="datosTabla"
+      class="elevation-1"
     >
       <template
         slot="items"
@@ -44,6 +46,7 @@
               slot="activator"
               :value="formatFecha(props.item.fecha)"
               readonly
+              placeholder="DD-MM-AAAA"
               full-width
               single-line
               auto-grow
@@ -127,11 +130,13 @@
             hint="pone cuenta"
             full-width
             single-line
+            class="cuenta"
           >
           </v-text-field>
         </td>
         <td class="pa-0">
           <v-text-field
+            class="años"
             slot="input"
             label="Edit"
             v-model="props.item.año"
@@ -139,8 +144,8 @@
             :return-value.sync="props.item.año"
             placeholder="Año"
             hint="Año"
-            full-width
             single-line
+            full-width
           >
           </v-text-field>
         </td>
@@ -174,27 +179,22 @@
         <v-btn color="primary">Reset</v-btn>
       </template>
     </v-data-table>
+    <v-toolbar
+      color="blue darken-4"
+      dark
+    >
 
-    <v-flex xs12>
-      <v-card
-        color="blue-grey darken-2"
-        class="white--text"
-        :readonly='true'
-      >
-        <v-card-title primary-title>
-          <div>
-            <div class="headline">
-              Monto Total: <money
-                :readonly='true'
-                :value='sumaMontos'
-                v-bind="moneyConfig"
-                single-line
-              ></money>
-            </div>
-          </div>
-        </v-card-title>
-      </v-card>
-    </v-flex>
+      <v-toolbar-title>Monto Total:</v-toolbar-title>
+      <v-spacer class="total">
+        <money
+          :readonly='true'
+          :value='sumaMontos'
+          v-bind="moneyConfig"
+        ></money>
+      </v-spacer>
+
+    </v-toolbar>
+
   </div>
 </template>
 <script>
@@ -226,13 +226,13 @@ export default {
     admin: true,
     editable: true,
     headers: [
-      { text: 'Fecha', value: 'fecha' },
-      { text: 'Monto', value: 'monto' },
-      { text: 'Proveedor', value: 'proveedor' },
-      { text: 'Número de factura', value: 'numeroFactura' },
-      { text: 'Concepto', value: 'concepto' },
-      { text: 'Cuenta', value: 'cuenta' },
-      { text: 'Año', value: 'año' },
+      { text: 'Fecha', value: 'fecha', sortable: false, align: 'left' },
+      { text: 'Monto', value: 'monto', sortable: false },
+      { text: 'Proveedor', value: 'proveedor', sortable: false },
+      { text: 'Número de factura', value: 'numeroFactura', sortable: false },
+      { text: 'Concepto', value: 'concepto', sortable: false },
+      { text: 'Cuenta', value: 'cuenta', sortable: false },
+      { text: 'Año', value: 'año', sortable: false, align: 'left' },
       { text: 'Comentarios', value: 'comentarios', sortable: false },
       { text: '', value: '', sortable: false }
     ]
@@ -259,7 +259,7 @@ export default {
     deleteItem (item) { this.$store.dispatch('deleteItem', item) },
     nuevo () {
       this.$store.state.datosTabla.push({
-        fecha: new Date(),
+        fecha: '',
         monto: '',
         comentarios: '',
         proveedor: '',
@@ -275,12 +275,6 @@ export default {
 }
 </script>
 <style style scoped>
-/* body:not(.user-is-tabbing) button:focus,
-body:not(.user-is-tabbing) input:focus,
-body:not(.user-is-tabbing) select:focus,
-body:not(.user-is-tabbing) textarea:focus {
-  outline: none; */
-/* } */
 input.v-money {
   font-size: 16px;
   text-align: left;
@@ -304,5 +298,18 @@ input.v-money {
 }
 .trash {
   padding-bottom: 20px;
+}
+.total {
+  font-size: 43px;
+  padding-left: 14px;
+  text-decoration: inherit;
+  font-family: "Roboto", sans-serif;
+}
+.años {
+  max-width: 70px;
+  padding-left: 15px;
+}
+.cuenta {
+  max-width: 150px;
 }
 </style>
