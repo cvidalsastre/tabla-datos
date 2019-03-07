@@ -204,9 +204,9 @@ import { VMoney } from 'v-money'
 import { mapState } from 'vuex'
 // otra tabla año cuota, fecha, monto(polata), tipo(menu despplegable adicionales(1) reformulacion(2) nada(3))
 export default {
-  mounted () {    this.$store.dispatch('cargaDatos')
+  mounted () {
+    this.$store.dispatch('cargaDatos')
   },
-
 
   data: () => ({
     // date: new Date().toISOString().substr(0, 10),
@@ -259,7 +259,7 @@ export default {
     deleteItem (item) { this.$store.dispatch('deleteItem', item) },
     nuevo () {
       this.$store.state.datosTabla.push({
-        fecha: '',
+        fecha: moment().format('YYYY-MM-DD'),
         monto: '',
         comentarios: '',
         proveedor: '',
